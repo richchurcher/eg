@@ -1,0 +1,23 @@
+exports.up = (knex, Promise) =>
+  knex.schema.createTable('comments', t => {
+    t.increments()
+    t.bigInteger('user_id')
+      .references('users.id')
+      .notNullable()
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE')
+    t.bigInteger('post_id')
+      .references('posts.id')
+      .notNullable()
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE')
+    t.bigInteger('parent_id')
+      .references('comments.id')
+      .onDelete('RESTRICT')
+      .onUpdate('CASCADE')
+    t.string('title')
+    t.text('body')
+    t.timestamps(true, true)
+  })
+
+exports.down = (knex, Promise) => knex.schema.dropTable('comments')
