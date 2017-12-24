@@ -1,0 +1,5 @@
+export const getComment = db => commentId => db('comments').where('id', commentId)
+export const getComments = db => () => db('comments')
+export const createComment = db => comment => db('comments').insert(comment)
+export const deleteComment = db => commentId => db('comments').where('id', commentId).del()
+export const updateComment = db => comment => db('comments').where('id', comment.id).update(comment)

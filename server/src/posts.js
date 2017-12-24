@@ -1,0 +1,5 @@
+export const getPost = db => postId => db('posts').where('id', postId)
+export const getPosts = db => () => db('posts')
+export const createPost = db => post => db('posts').insert(post)
+export const deletePost = db => postId => db('posts').where('id', postId).del()
+export const updatePost = db => post => db('posts').where('id', post.id).update(post)

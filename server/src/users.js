@@ -1,0 +1,5 @@
+export const getUser = db => userId => db('users').where('id', userId)
+export const getUsers = db => () => db('users')
+export const createUser = db => userInput => db('users').insert(userInput)
+export const deleteUser = db => userId => db('users').where('id', userId).del()
+export const updateUser = db => userInput => db('users').update(userInput).where('id', userInput.id)

@@ -13,7 +13,7 @@
     "server": "pm2 start egserver.config.js",
     "start": "npm run server && npm run client",
     "start:server": "npm run transpile && node server/dist/index.js",
-    "stop": "pm2 delete egserver && pm2 delete egclient",
+    "stop": "pm2 delete egserver",
     "test": "npm run unit && npm run e2e",
     "transpile": "babel server/src --out-dir server/dist",
     "unit": "jest --config test/unit/jest.conf.js --coverage"
@@ -25,8 +25,11 @@
     "knex": "^0.14.2",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
+    "koa-jwt": "^3.3.0",
+    "koa-knex-piet": "^0.7.8",
     "koa-router": "^7.3.0",
     "pg": "^7.4.0",
+    "sodium": "^2.0.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
