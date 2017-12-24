@@ -1,10 +1,15 @@
 import { makeExecutableSchema } from 'graphql-tools'
+
+import * as auth from './auth'
 import * as comments from './comments'
 import * as posts from './posts'
 import * as users from './users'
 
 const typeDefs = `
   type Mutation {
+    login (credentials: CredentialsInput): AuthResult
+    logout: AuthResult
+
     createComment (comment: CommentInput): Comment
     deleteComment (commentId: ID): [Comment]
     updateComment (comment: CommentInput): Comment
@@ -27,6 +32,9 @@ const typeDefs = `
     user (id: ID): User
     users: [User]
   }
+  type AuthResult { success: Boolean, message: String }
+  input CredentialsInput { name: String, password: String }
+
   type Comment { id: ID, body: String }
   input CommentInput { id: ID, body: String }
 
@@ -39,25 +47,30 @@ const typeDefs = `
 
 const resolvers = {
   Mutation: {
-    createComment: (_, { comment }, { db }) => comments.createComment(db)(comment),
-    deleteComment: (_, { commentId }, { db }) => comments.deleteComment(db)(commentId),
-    updateComment: (_, { comment }, { db }) => comments.updateComment(db)(comment),
+    login: (_, { credentials }, { db }) => auth.login(db)(credentials),
+    logout: (_, __, { db }) => auth.logout(db)(),
 
-    createPost: (_, { post }, { db }) => posts.createPost(db)(post),
-    deletePost: (_, { postId }, { db }) => posts.deletePost(db)(postId),
-    updatePost: (_, { post }, { db }) => posts.updatePost(db)(post),
+    createComment: (_, { comment }, { db }) => comments.create(db)(comment),
+    deleteComment: (_, { commentId }, { db }) => comments.remove(db)(commentId),
+    updateComment: (_, { comment }, { db }) => comments.update(db)(comment),
 
-    createUser: (_, { user }, { db }) => users.createUser(db)(user),
-    deleteUser: (_, { userId }, { db }) => users.deleteUser(db)(userId),
-    updateUser: (_, { user }, { db }) => users.updateUser(db)(user)
+    createPost: (_, { post }, { db }) => posts.create(db)(post),
+    deletePost: (_, { postId }, { db }) => posts.remove(db)(postId),
+    updatePost: (_, { post }, { db }) => posts.update(db)(post),
+
+    createUser: (_, { user }, { db }) => users.create(db)(user),
+    deleteUser: (_, { userId }, { db }) => users.remove(db)(userId),
+    updateUser: (_, { user }, { db }) => users.update(db)(user)
   },
   Query: {
-    comment: (_, { commentId }, { db }) => comments.getComment(db)(commentId),
-    comments: (_, __, { db }) => comments.getComments(db)(),
-    post: (_, { postId }, { db }) => posts.getPost(db)(postId),
-    posts: (_, __, { db }) => posts.getPosts(db)(),
-    user: (_, { userId }, { db }) => users.getUser(db)(userId),
-    users: (_, __, { db }) => users.getUsers(db)()
+    comment: (_, { commentId }, { db }) => comments.withId(db)(commentId),
+    comments: (_, __, { db }) => comments.all(db)(),
+
+    post: (_, { postId }, { db }) => posts.withId(db)(postId),
+    posts: (_, __, { db }) => posts.all(db)(),
+
+    user: (_, { userId }, { db }) => users.withId(db)(userId),
+    users: (_, __, { db }) => users.all(db)()
   }
 }
 
