@@ -7,7 +7,7 @@ import * as users from './users'
 
 const typeDefs = `
   type Mutation {
-    login (credentials: CredentialsInput): AuthResult
+    login (credentials: CredentialsInput!): AuthResult
     logout: AuthResult
 
     createComment (comment: CommentInput): Comment
@@ -33,16 +33,16 @@ const typeDefs = `
     users: [User]
   }
   type AuthResult { success: Boolean, message: String }
-  input CredentialsInput { name: String, password: String }
+  input CredentialsInput { name: String!, password: String! }
 
   type Comment { id: ID, body: String }
-  input CommentInput { id: ID, body: String }
+  input CommentInput { id: ID, body: String! }
 
   type Post { id: ID, title: String, body: String }
-  input PostInput { id: ID, title: String, body: String }
+  input PostInput { id: ID, title: String!, body: String! }
 
-  type User { id: ID, name: String, hash: String }
-  input UserInput { id: ID, name: String, hash: String }
+  type User { id: ID, name: String }
+  input UserInput { id: ID, name: String, password: String }
 `
 
 const resolvers = {
