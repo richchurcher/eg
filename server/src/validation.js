@@ -18,6 +18,8 @@ export const minLengthMsg = (field, len) => `${field} must be at least ${len} ch
 export const notEmpty = compose(not, isEmpty)
 export const notEmptyMsg = field => `${field} is required.`
 
+// See https://github.com/25th-floor/spected/issues/90#issuecomment-320293347
+// and surrounding discussion
 export const isValid = spec => input => {
   let valid = true
 
@@ -32,4 +34,15 @@ export const isValid = spec => input => {
     valid,
     validation
   }
+}
+
+export const validator = (spec, inputKey) => next => (...args) => {
+  const input = args[1]
+  const validator = isValid(spec)
+  const validationResult = validator(input[inputKey])
+  if (!validationResult.valid) {
+    throw new ValidationError(validationResult, `${inputKey} validation failed.`)
+  }
+
+  next(...args)
 }

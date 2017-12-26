@@ -1,4 +1,4 @@
-import { isValid, maxLength, maxLengthMsg, minLength, minLengthMsg } from './validation'
+import { maxLength, maxLengthMsg, minLength, minLengthMsg, validator } from './validation'
 
 export const all = db => () => db('users')
 export const create = db => userInput => db('users').insert(userInput)
@@ -21,4 +21,4 @@ const credentialsSpec = {
   ]
 }
 
-export const validateCredentials = isValid(credentialsSpec)
+export const validateCredentials = validator(credentialsSpec, 'credentials')

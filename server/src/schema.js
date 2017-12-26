@@ -47,7 +47,7 @@ const typeDefs = `
 
 const resolvers = {
   Mutation: {
-    login: (_, { credentials }, { db }) => auth.login(db)(credentials),
+    login: users.validateCredentials(auth.login),
     logout: (_, __, { db }) => auth.logout(db)(),
 
     createComment: (_, { comment }, { db }) => comments.create(db)(comment),
