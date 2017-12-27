@@ -36,6 +36,11 @@ export const isValid = spec => input => {
   }
 }
 
+// For example:
+//   export const validateUser = validator(spec, 'user')
+//   export const mutations = {
+//     updateUser: validateUser(updateUser)
+//   }
 export const validator = (spec, inputKey) => next => (...args) => {
   const input = args[1]
   const validator = isValid(spec)
